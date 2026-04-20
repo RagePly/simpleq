@@ -35,7 +35,7 @@ if [ -f $OUTDIR/eq.pdf ]; then
     && pdftocairo -png  -r 1200 -transp -singlefile $OUTDIR/eq-crop.pdf -
 
   res=$?
-  if [ $res != 0 ]; then
+  if [ $res -ne 0 ]; then
     echo No image created 1>&2
   fi
 
