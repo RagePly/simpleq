@@ -20,10 +20,49 @@ fi
 mkdir -p /tmp/simpleq
 OUTDIR=$(mktemp -p /tmp/simpleq/ -d eq.XXX)
 
-cat <(echo '\documentclass{standalone}
-  \usepackage{amsmath}
+cat <(echo '\documentclass[border=0pt]{standalone}
+
+  % --- Core math ---
+  \usepackage{amsmath,amssymb,amsfonts,mathtools}
+
+  % --- Colors ---
+  \usepackage{xcolor}
+
+  % --- Units ---
+  \usepackage{siunitx}
+
+  % --- Symbol extensions ---
+  \usepackage{bm}         % bold math
+  \usepackage{mathrsfs}   % script fonts
+  \usepackage{dsfont}     % double-stroke (ℝ, ℕ, indicator functions)
+  \usepackage{stmaryrd}   % semantic brackets, maps, etc.
+  \usepackage{wasysym}    % miscellaneous symbols
+  \usepackage{esint}      % extended integral symbols
+  \usepackage{cancel}     % cancel / strikeout
+  \usepackage{braket}     % braket notation
+
+  % --- Layout / highlighting ---
+  \usepackage{empheq}     % boxed / highlighted equations
+
+  % --- Math helpers ---
+  \usepackage{commath}    % derivatives, norms, abs, etc.
+
+  % --- Fonts ---
+  \usepackage{lmodern}        % better default Latin Modern
+  \usepackage{inconsolata}    % high-quality monospace
+
+  % --- Microtypography (safe even for standalone) ---
+  \usepackage{microtype}
+
+  % --- Optional: better spacing control ---
+  \usepackage{relsize}
+
+  % --- Sensible defaults ---
+  \everymath{\displaystyle}
+
   \begin{document}
-  \begin{equation*}') \
+  \begin{equation*}
+  \displaystyle') \
   - \
   <(echo '\end{equation*}
   \end{document}') > $OUTDIR/eq.tex
