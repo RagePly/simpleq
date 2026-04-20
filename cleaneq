@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -d /tmp/simpleq ]; then
+  echo Cleaning up temp-files
+  rm -rf /tmp/simpleq 
+else
+  echo Already clean
+fi
+

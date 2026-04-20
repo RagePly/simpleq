@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Check dependencies
+
+if ! which pdflatex pdfcrop pdftocairo 1>/dev/null 2>&1; then
+  echo Error: missing dependencies: 1>&2
+  if ! which pdflatex 1>/dev/null 2>&1; then
+    echo pdflatex 1>&2
+  fi
+  if ! which pdfcrop 1>/dev/null 2>&1; then
+    echo pdfcrop 1>&2
+  fi
+  if ! which pdftocairo 1>/dev/null 2>&1; then
+    echo pdftocairo 1>&2
+  fi
+
+  exit 1
+fi
+
+mkdir -p /tmp/simpleq
+OUTDIR=$(mktemp -p /tmp/simpleq/ -d eq.XXX)
+
+cat <(echo '\documentclass{standalone}
+  \usepackage{amsmath}
+  \begin{document}
+  \begin{equation*}') \
+  - \
+  <(echo '\end{equation*}
+  \end{document}') > $OUTDIR/eq.tex
+
+pdflatex -interaction=nonstopmode --output-directory=$OUTDIR $OUTDIR/eq.tex 1>&2 \
+
+if [ -f $OUTDIR/eq.pdf ]; then
+  pdfcrop $OUTDIR/eq.pdf $OUTDIR/eq-crop.pdf 1>&2 \
+    && pdftocairo -png  -r 1200 -transp -singlefile $OUTDIR/eq-crop.pdf -
+
+  res=$?
+  if [ $res != 0 ]; then
+    echo No image created 1>&2
+  fi
+
+  exit $res
+else
+  echo No image created 1>&2
+  exit 1
+fi
+

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if ! which parallel simpleq 1>/dev/null 2>&1; then
+  echo Error: missing dependencies: 1>&2
+
+  if ! which parallel 1>/dev/null 2>&1; then
+    echo parallel 1>&2
+  fi
+
+  if ! which simpleq 1>/dev/null 2>&1; then
+    echo simpleq 1>&2
+  fi
+
+  exit 1
+fi
+
+outdir=$1
+shift
+
+if [ ! -d $outdir ]; then
+  mkdir -p $outdir
+fi
+
+parallel --bar "simpleq < {} > $outdir/{/.}.png" ::: $*
+
